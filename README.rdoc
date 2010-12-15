@@ -1,10 +1,12 @@
 = autowatchr
 
-Provides some autotest-like behavior for watchr (http://github.com/mynyml/watchr).
+Fork of viking's autowatchr library (http://github.com/viking/autowatchr) to fix
+issues and add features. Provides some autotest-like behavior for
+watchr (http://github.com/mynyml/watchr).
 
 == Installation
 
-  gem install autowatchr --source http://gemcutter.org
+  gem install harmon-autowatchr
 
 == Current features
 
