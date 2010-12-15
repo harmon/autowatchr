@@ -4,12 +4,12 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "autowatchr"
+    gem.name = "harmon-autowatchr"
     gem.summary = %Q{Provides some autotest-like behavior for watchr}
-    gem.description = %Q{Provides some autotest-like behavior for watchr (http://github.com/mynyml/watchr).}
-    gem.email = "viking415@gmail.com"
-    gem.homepage = "http://github.com/viking/autowatchr"
-    gem.authors = ["Jeremy Stephens"]
+    gem.description = %Q{Fork of viking's autowatchr library to fix some issues and add some features. Provides some autotest-like behavior for watchr (http://github.com/mynyml/watchr).}
+    gem.email = "harmon@harmonius.net"
+    gem.homepage = "http://github.com/harmon/autowatchr"
+    gem.authors = ["Jeremy Stephens", "Adam Grant"]
     gem.add_dependency "watchr"
     gem.add_development_dependency "mocha"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
