@@ -116,12 +116,22 @@ class TestAutowatchr < Test::Unit::TestCase
     end
   end
 
-  def test_running_multiple_test_files
+  def test_running_multiple_test_files_with_require_run_method
     expected_cmd = "/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} -e \"%w[#{@test_dir}/test_bar.rb #{@test_dir}/test_foo.rb].each do |f| require f end\""
     Autowatchr.any_instance.expects_system_call(expected_cmd, "all")
 
     silence_stream(STDOUT) do
       aw = new_autowatchr
+      aw.run_test_file(["#{@test_dir}/test_bar.rb", "#{@test_dir}/test_foo.rb"])
+    end
+  end
+
+  def test_running_multiple_test_files_with_individual_run_method
+    expected_cmd = "/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} '#{@test_dir}/test_bar.rb' '#{@test_dir}/test_foo.rb'"
+    Autowatchr.any_instance.expects_system_call(expected_cmd, "all")
+
+    silence_stream(STDOUT) do
+      aw = new_autowatchr(:run_method => :individual)
       aw.run_test_file(["#{@test_dir}/test_bar.rb", "#{@test_dir}/test_foo.rb"])
     end
   end

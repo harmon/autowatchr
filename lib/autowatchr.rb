@@ -5,7 +5,7 @@ class Autowatchr
   class Config
     attr_writer :command, :ruby, :include, :require, :lib_dir, :test_dir,
       :lib_re, :test_re, :failed_results_re, :completed_re, :failing_only,
-      :run_suite
+      :run_suite, :run_method
 
     def initialize(options = {})
       @failing_only = @run_suite = true
@@ -16,6 +16,10 @@ class Autowatchr
           self.send(method, value)
         end
       end
+    end
+
+    def run_method
+      @run_method ||= :require
     end
 
     def command
@@ -137,7 +141,7 @@ class Autowatchr
   end
 
   def run_test_file(files)
-    files = [files]   unless files.is_a?(Array)
+    files = [files] unless files.is_a?(Array)
 
     passing  = []
     commands = []
@@ -152,11 +156,15 @@ class Autowatchr
     end
 
     if !passing.empty?
-      predicate = if passing.length > 1
-                    "-e \"%w[#{passing.join(" ")}].each do |f| require f end\""
-                  else
-                    passing[0]
-                  end
+      if passing.length > 1
+        if @config.run_method == :individual
+          predicate = "'#{passing.join("' '")}'"
+        else
+          predicate = "-e \"%w[#{passing.join(" ")}].each do |f| require f end\""
+        end
+      else
+        predicate = passing[0]
+      end
       commands.unshift(@config.eval_command(predicate))
     end
 
