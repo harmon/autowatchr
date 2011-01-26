@@ -117,7 +117,7 @@ class TestAutowatchr < Test::Unit::TestCase
   end
 
   def test_running_multiple_test_files_with_require_run_method
-    expected_cmd = "/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} -e \"%w[#{@test_dir}/test_bar.rb #{@test_dir}/test_foo.rb].each do |f| require f end\""
+    expected_cmd = "/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} -e \"%w[#{@test_dir}/test_bar.rb #{@test_dir}/test_foo.rb].each { |file| require file }\""
     Autowatchr.any_instance.expects_system_call(expected_cmd, "all")
 
     silence_stream(STDOUT) do
@@ -126,19 +126,19 @@ class TestAutowatchr < Test::Unit::TestCase
     end
   end
 
-  def test_running_multiple_test_files_with_individual_run_method
-    expected_cmd = "/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} '#{@test_dir}/test_bar.rb' '#{@test_dir}/test_foo.rb'"
+  def test_running_multiple_test_files_with_load_run_method
+    expected_cmd = "/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} -e \"%w[#{@test_dir}/test_bar.rb #{@test_dir}/test_foo.rb].each { |file| load file }\""
     Autowatchr.any_instance.expects_system_call(expected_cmd, "all")
 
     silence_stream(STDOUT) do
-      aw = new_autowatchr(:run_method => :individual)
+      aw = new_autowatchr(:run_method => :load)
       aw.run_test_file(["#{@test_dir}/test_bar.rb", "#{@test_dir}/test_foo.rb"])
     end
   end
 
   def test_runs_all_test_files_on_start
     files = Dir.glob("#{@test_dir}/**/test_*.rb").join(" ")
-    expected_cmd = %!/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} -e "%w[#{files}].each do |f| require f end"!
+    expected_cmd = %!/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} -e "%w[#{files}].each { |file| require file }"!
     Autowatchr.any_instance.expects_system_call(expected_cmd, "all")
 
     silence_stream(STDOUT) do
@@ -240,7 +240,7 @@ class TestAutowatchr < Test::Unit::TestCase
     aw.expects_system_call(expected_cmd_3, "bar_pass")
 
     files = Dir.glob("#{@test_dir}/**/test_*.rb").join(" ")
-    expected_cmd_4 = %!/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} -e "%w[#{files}].each do |f| require f end"!
+    expected_cmd_4 = %!/usr/local/bin/ruby -I.:#{@lib_dir}:#{@test_dir} -e "%w[#{files}].each { |file| require file }"!
     aw.expects_system_call(expected_cmd_4, "all")
 
     silence_stream(STDOUT) do

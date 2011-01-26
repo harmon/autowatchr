@@ -157,10 +157,10 @@ class Autowatchr
 
     if !passing.empty?
       if passing.length > 1
-        if @config.run_method == :individual
-          predicate = "'#{passing.join("' '")}'"
+        if @config.run_method == :load
+          predicate = "-e \"%w[#{passing.join(" ")}].each { |file| load file }\""
         else
-          predicate = "-e \"%w[#{passing.join(" ")}].each do |f| require f end\""
+          predicate = "-e \"%w[#{passing.join(" ")}].each { |file| require file }\""
         end
       else
         predicate = passing[0]

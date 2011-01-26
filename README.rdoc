@@ -41,8 +41,10 @@ test.watchr
 * run_method
   * The way the ruby files are "require"-ed.
   * Two options:
-    * <tt>:default    => ruby -e "%w[test/first_test.rb test/second_test.rb].each do |f| require f end"</tt>
-    * <tt>:individual => ruby "test/first_test.rb" "test/second_test.rb"</tt>
+    * <tt>:require  => ruby -e "%w[test/first_test.rb test/second_test.rb].each { |file| require file }"</tt>
+    * <tt>:load     => ruby -e "%w[test/first_test.rb test/second_test.rb].each { |file| load file }"</tt>
+  * Default: <tt>:require</tt>
+  * It is advised to use <tt>:load</tt> when running tests in Rails since that is what "rake test" uses.
 * include
   * Paths to include (with -I)
   * Default: <tt>".:#{self.lib_dir}:#{self.test_dir}"</tt>
